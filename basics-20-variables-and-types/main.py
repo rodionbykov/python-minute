@@ -9,6 +9,9 @@ print(a)
 print(b)
 print(c)
 
+# show type of variable
+print(type(c))
+
 # basic math with integers
 d = (c + 14) * 2
 
@@ -34,6 +37,9 @@ g = f / 6
 print(f)
 print(g)
 
+# show type of variable
+print(type(g))
+
 # integer division
 e = f // 5
 print(e)
@@ -48,12 +54,8 @@ print(h)
 s = "Some text in the string"
 print(s)
 
-# strings are 0-based arrays so we can pick up an element
-print(s[2])
-# we can slice string since it's an array
-print(s[2:4])
-# or take string's length
-print(len(s))
+# show type of variable
+print(type(s))
 
 # multiline strings
 mls = """
