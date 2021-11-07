@@ -1,6 +1,7 @@
 from django.http.response import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse
 
 # Create your views here.
 
@@ -26,7 +27,8 @@ def index_by_number(request, month_number):
         return HttpResponseNotFound("Month not found")
 
     month = month_names[month_number - 1] # for 0 based list
-    return HttpResponseRedirect("/challenges/" + month)
+    redirect_path = reverse("index", args=[month]) # will take actual URL from urls file
+    return HttpResponseRedirect(redirect_path)
 
 def index(request, month):
     return_text = ""
