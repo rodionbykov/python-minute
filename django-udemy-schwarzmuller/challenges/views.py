@@ -2,6 +2,7 @@ from django.http.response import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -20,6 +21,7 @@ challenges = {
     "december": "Family meetings"
 }
 
+
 def index(request):
     list_items = ""
     month_names = list(challenges.keys())
@@ -32,6 +34,7 @@ def index(request):
     response_data = f"<ul>{list_items}</ul>"
     return HttpResponse(response_data)
 
+
 def challenges_by_month_number(request, month_number):
     month_names = list(challenges.keys())
 
@@ -42,10 +45,11 @@ def challenges_by_month_number(request, month_number):
     redirect_path = reverse("monthly_challenge", args=[month]) # will take actual URL from urls file
     return HttpResponseRedirect(redirect_path)
 
+
 def challenges_by_month_name(request, month):
     return_text = ""
     try:
-        return_text = challenges[month]
+        return_text = render_to_string("challenges\challenge.html")
         return HttpResponse(return_text)
     except:
         return HttpResponseNotFound("Challenge not found")
