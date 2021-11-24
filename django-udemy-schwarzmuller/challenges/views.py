@@ -1,4 +1,4 @@
-from django.http.response import HttpResponseNotFound, HttpResponseRedirect
+from django.http.response import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -46,4 +46,4 @@ def challenges_by_month_name(request, month_name):
             "challenge_text": challenges[month_name]
         })
     except:
-        return HttpResponseNotFound("Challenge not found")
+        raise Http404()
