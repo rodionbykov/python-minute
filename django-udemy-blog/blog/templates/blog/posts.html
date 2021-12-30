@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'blog/styles/posts.css' %}" />
+    
+{% endblock styles %}
+
+{% block title %}All blog posts{% endblock title %}
+
+{% block content %}
+    
+    <section id="all-posts">
+        <h2>All entries</h2>
+        <ul>
+            <li>
+                {% include "blog/includes/post-preview.html" %}
+            </li>
+        </ul>
+    </section>
+
+{% endblock content %}

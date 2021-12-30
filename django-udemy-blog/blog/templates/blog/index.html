@@ -4,18 +4,13 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'blog/styles/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'blog/styles/post.css' %}" />
 {% endblock styles %}
 
 {% block title %}Blog home{% endblock title %}
 
 {% block content %}
-    <header id="main-navigation">
-        <h1><a href="">My Great Blog</a></h1>
-        <nav>
-            <a href="">All posts</a>
-        </nav>
-    </header>
-
+    
     <section id="welcome">
         <header>
             <img src="{% static 'blog/images/max.png' %}" alt="" />
@@ -28,14 +23,7 @@
         <h2>Latest entries</h2>
         <ul>
             <li>
-                <article class="post">
-                    <a href=""></a>
-                    <img src="{% static 'blog/images/mountains.jpg' %}" alt="Welcome" />
-                    <div class="post__content">
-                        <h3>Welcome post</h3>
-                        <p>You will not believe what it's about</p>
-                    </div>
-                </article>
+                {% include "blog/includes/post-preview.html" %}
             </li>
         </ul>
     </section>
