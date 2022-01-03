@@ -14,9 +14,11 @@
     <section id="all-posts">
         <h2>All entries</h2>
         <ul>
+            {% for post in posts  %}
             <li>
                 {% include "blog/includes/post-preview.html" %}
             </li>
+            {% endfor %}
         </ul>
     </section>
 
