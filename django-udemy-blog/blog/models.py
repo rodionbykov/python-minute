@@ -1,16 +1,31 @@
-from pyexpat import model
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MinLengthValidator
 
 # Create your models here.
 
 class Author(models.Model):
     full_name = models.CharField(max_length=127)
+    email = models.EmailField(max_length=127, null=True)
+    
+    def __str__(self):
+        return f"{self.full_name}"
 
-class Post(models.Model):
-    title = models.CharField(max_length=255)
-    likes = models.IntegerField(validators=[MinValueValidator(0)])
-    author = models.ForeignKey(Author, null=True, on_delete=models.CASCADE, related_name="posts")
+class Tag(models.Model):
+    caption = models.CharField(max_length=31)
 
     def __str__(self):
-        return f"{self.title}, {self.likes} likes"
+        return f"{self.caption}"
+    
+class Post(models.Model):
+    title = models.CharField(max_length=127)
+    excerpt = models.CharField(max_length=255)
+    image = models.CharField(max_length=255)
+    date = models.DateField(auto_now=True)
+    slug = models.SlugField(unique=True)
+    content = models.TextField(validators=[MinLengthValidator(20)])
+    likes = models.IntegerField(validators=[MinValueValidator(0)])
+    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL, related_name="posts")
+    tags = models.ManyToManyField(Tag)
+
+    def __str__(self):
+        return f"{self.title}"
