@@ -1,7 +1,8 @@
 import validators
 import secrets
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from . import models, schema
@@ -9,6 +10,7 @@ from .database import SessionLocal, engine
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
+
 
 def get_db():
     db = SessionLocal()
@@ -21,6 +23,21 @@ def get_db():
 @app.get("/")
 def get_home():
     return "Hello world"
+
+
+@app.get("/{url_key}")
+def get_url_redirect(url_key: str, request: Request, db: Session = Depends(get_db)):
+    db_url = (
+            db
+              .query(models.URL)
+              .filter(models.URL.key == url_key, models.URL.is_active)
+              .first()
+              )
+    if db_url:
+        return RedirectResponse(db_url.target_url)
+    else:
+        HTTPException(status_code=404, detail="URL with key {url_key} not found")
+
 
 @app.post("/", response_model=schema.URLInfo)
 def create_url(url: schema.URLBase, db: Session = Depends(get_db)):
@@ -41,6 +58,8 @@ def create_url(url: schema.URLBase, db: Session = Depends(get_db)):
     db_url.clicks = 0
 
     return db_url
+
+
 def get_secret_key(kind, len):
     charsLower = "abcdefghijklmnopqrstuvwxyz"
     charsUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
