@@ -1,9 +1,7 @@
-# name=" Barbos "
-# name=name.lower().strip()
-# print(name)
-
 import random
+
 name=input("What's your name?:").lower()
+
 bet=input("Your bet:")
 if bet.isdigit():
     bet_value = int(bet)
@@ -16,8 +14,8 @@ print("Hello", name.capitalize(), "let's play Rock, paper, or scissors")
 u=input('Enter R,P,S:').upper().strip()
 print("you:",u)
 
-
-if name == "artem":
+# cheating
+if name == "alice":
     if u == "R":
         c = "P"
     if u == "S":
@@ -25,7 +23,8 @@ if name == "artem":
     if u == "P":
         c = "S"
 
-if name == "andri":
+# cheating even more
+if name == "bob":
     if u == "R":
         c = "S"
     if u == "S":
@@ -33,7 +32,7 @@ if name == "andri":
     if u == "P":
         c = "R"
 
-print("computer",c)
+print("computer", c)
 w_value=bet_value*2
 l_value=0
 if c == u:
@@ -51,4 +50,4 @@ elif u == "P" and c == "S":
 elif u == "S" and c == "P":
     print("You WIN!")
 else:
-    print("You are stupid! ONLY R, P, S!!!")
+    print("No, only R, P, S!")
