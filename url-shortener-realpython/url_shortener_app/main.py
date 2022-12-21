@@ -29,9 +29,10 @@ def get_home():
 @app.get("/{url_key}")
 def get_url_redirect(url_key: str, request: Request, db: Session = Depends(get_db)):
     if db_url := crud.get_db_url_by_key(db=db, url_key=url_key):
+        crud.update_url_clicks(db=db, db_url=db_url)
         return RedirectResponse(db_url.target_url)
     else:
-        HTTPException(status_code=404, detail="URL with key {url_key} not found")
+        raise HTTPException(status_code=404, detail="URL with key {url_key} not found")
 
 
 @app.post("/", response_model=schema.URLInfo)
@@ -49,7 +50,15 @@ def get_url_admin(url_secret_key: str, request: Request, db: Session = Depends(g
     if db_url := crud.get_db_url_by_secret_key(db=db, url_secret_key=url_secret_key):
         return get_admin_info(db_url)
     else:
-        HTTPException(status_code=404, detail="URL with secret key {url_secret_key} not found")
+        raise HTTPException(status_code=404, detail="URL with this secret key not found")
+
+
+@app.delete("/admin/{url_secret_key}")
+def delete_url_admin(url_secret_key: str, request: Request, db: Session = Depends(get_db)):
+    if db_url := crud.deactivate_url_by_secret_key(db=db, url_secret_key=url_secret_key):
+        message = "Success"
+    else:
+        raise HTTPException(status_code=404, detail="URL with this secret key not found")
 
 
 def get_admin_info(db_url: models.URL) -> schema.URLInfo:
