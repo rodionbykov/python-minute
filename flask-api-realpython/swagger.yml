@@ -1,0 +1,94 @@
+# swagger.yml
+
+openapi: 3.0.0
+info:
+  title: "Flask REST API"
+  description: "An API about nothing"
+  version: "1.0.0"
+servers:
+  - url: "/api"
+paths:
+  /people:
+    get:
+      operationId: "people.read_all"
+      tags:
+        - "People"
+      summary: "Read the list of people"
+      responses:
+        "200":
+          description: "Successfully read people list"
+    post:
+      operationId: "people.create"
+      tags:
+        - "People"
+      summary: "Create a person"
+      requestBody:
+        description: "Person structure"
+        required: True
+        content:
+          application/json:
+            schema:
+              x-body-name: "person"
+              $ref: "#/components/schemas/Person"
+      responses:
+        "201":
+          description: "Successfully created"
+  /people/{lastname}:
+    get:
+      operationId: "people.read_one"
+      tags:
+        - "People"
+      summary: "Read the one person"
+      parameters:
+        - $ref: "#/components/parameters/lastname"
+      responses:
+        "200":
+          description: "Successfully read a person"
+    put:
+      operationId: "people.update"
+      tags:
+        - "People"
+      summary: "Update a person"
+      parameters:
+        - $ref: "#/components/parameters/lastname"
+      responses:
+        "200":
+          description: "Successfully updated a person"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "person"
+              $ref: "#/components/schemas/Person"
+    delete:
+      operationId: "people.delete"
+      tags:
+        - "People"
+      summary: "Deletes a person"
+      parameters:
+        - $ref: "#/components/parameters/lastname"
+      responses:
+        "204":
+          description: "Successfully deleted a person"
+components:
+  schemas:
+    Person:
+      type: "object"
+      required:
+        - lastname
+        - firstname
+      properties:
+        title:
+          type: "string"
+        lastname:
+          type: "string"
+        firstname:
+          type: "string"
+  parameters:
+    lastname:
+      name: "lastname"
+      description: "Last name of the person to get"
+      in: path
+      required: True
+      schema:
+        type: "string"
