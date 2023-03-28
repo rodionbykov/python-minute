@@ -8,7 +8,17 @@
 </head>
 <body>
     <h1>
-        Hello, World!
+        People
     </h1>
+    <table>
+        {% for person in people %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>{{ person.lastname }}</td>
+            <td>{{ person.firstname }}</td>
+            <td>{{ person.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>

@@ -1,39 +1,21 @@
 # people.py
 
-from datetime import datetime
 from flask import abort, make_response
-
-
-def get_timestamp():
-    return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
-
-
-PEOPLE = {
-    "Fairy": {
-        "firstname": "Tooth",
-        "lastname": "Fairy",
-        "timestamp": get_timestamp(),
-    },
-    "Ruprecht": {
-        "firstname": "Knecht",
-        "lastname": "Ruprecht",
-        "timestamp": get_timestamp(),
-    },
-    "Bunny": {
-        "firstname": "Easter",
-        "lastname": "Bunny",
-        "timestamp": get_timestamp(),
-    }
-}
+from config import db
+from models import Person
+from schemas import people_schema, person_schema
 
 
 def read_all():
-    return list(PEOPLE.values())
+    people = Person.query.all()
+    return people_schema.dump(people)
 
 
 def read_one(lastname):
-    if lastname in PEOPLE:
-        return PEOPLE[lastname]
+    person = Person.query.filter(Person.lastname == lastname).one_or_none()
+
+    if person is not None:
+        return person_schema.dump(person)
     else:
         abort(
             404, f"Person with last name {lastname} not found"
@@ -42,15 +24,14 @@ def read_one(lastname):
 
 def create(person):
     lastname = person.get("lastname")
-    firstname = person.get("firstname")
 
-    if lastname and lastname not in PEOPLE:
-        PEOPLE[lastname] = {
-            "lastname": lastname,
-            "firstname": firstname,
-            "timestamp": get_timestamp(),
-        }
-        return PEOPLE[lastname], 201
+    existing_person = Person.query.filter(Person.lastname == lastname).one_or_none()
+
+    if existing_person is None:
+        new_person = person_schema.load(person, session=db.session)
+        db.session.add(new_person)
+        db.session.commit()
+        return person_schema.dump(new_person), 201
     else:
         abort(
             406,
@@ -59,21 +40,27 @@ def create(person):
 
 
 def update(lastname, person):
-    if lastname in PEOPLE:
-        PEOPLE[lastname]["firstname"] = person.get("firstname", PEOPLE[lastname]["firstname"])
-        PEOPLE[lastname]["timestamp"] = get_timestamp()
-        return PEOPLE[lastname]
+    existing_person = Person.query.filter(Person.lastname == lastname).one_or_none()
+
+    if existing_person:
+        update_person = person_schema.load(person, session=db.session)
+        existing_person.firstname = update_person.firstname
+        db.session.merge(existing_person)
+        db.session.commit()
+        return person_schema.dump(existing_person), 201
     else:
         abort(
             404, f"Person with last name {lastname} not found"
         )
 
+
 def delete(lastname):
-    if lastname in PEOPLE:
-        del PEOPLE[lastname]
-        return make_response(
-            f"Person with last name {lastname} was deleted", 204
-        )
+    existing_person = Person.query.filter(Person.lastname == lastname).one_or_none()
+
+    if existing_person:
+        db.session.delete(existing_person)
+        db.session.commit()
+        return make_response(f"{lastname} successfully deleted", 200)
     else:
         abort(
             404, f"Person with last name {lastname} not found"
