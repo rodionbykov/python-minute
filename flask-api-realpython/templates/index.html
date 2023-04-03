@@ -18,6 +18,15 @@
             <td>{{ person.firstname }}</td>
             <td>{{ person.timestamp }}</td>
         </tr>
+        <tr>
+            <td colspan="4">
+                <ul>
+                    {% for note in person.notes %}
+                    <li>{{ note.timestamp }} {{ note.content }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
         {% endfor %}
     </table>
 </body>
