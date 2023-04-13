@@ -7,6 +7,7 @@ from models import Person
 app = config.connexion_app
 app.add_api(config.basedir / "swagger.yml")
 
+
 @app.route("/")
 def index():
     people = Person.query.all()

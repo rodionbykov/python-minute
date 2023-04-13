@@ -27,3 +27,4 @@ person_schema = PersonSchema()
 people_schema = PersonSchema(many=True)
 
 note_schema = NoteSchema()
+notes_schema = NoteSchema(many=True)
