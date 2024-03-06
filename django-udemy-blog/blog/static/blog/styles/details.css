@@ -202,3 +202,14 @@ main {
 #comments h2 {
   color: #464646;
 }
+
+#read-later {
+  margin: 2rem 0;
+}
+
+#read-later button {
+  background-color: transparent;
+  border: 1px solid white;
+  padding: 0.5rem 2rem;
+  font: inherit;
+}
